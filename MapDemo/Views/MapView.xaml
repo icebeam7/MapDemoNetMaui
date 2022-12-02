@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MapDemo.Views.MapView"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:vm="clr-namespace:MapDemo.ViewModels"
+             xmlns:models="clr-namespace:MapDemo.Models"
+             x:DataType="vm:MapViewModel"
+             Title="MapView">
+    <Grid Margin="10"
+          RowSpacing="10"
+          RowDefinitions="Auto,*">
+        <Button Text="Get Current Location"
+                Command="{Binding GetCurrentLocationCommand}"/>
+        
+        <maps:Map Grid.Row="1" 
+                  ItemsSource="{Binding Places}">
+            <maps:Map.ItemTemplate>
+                <DataTemplate x:DataType="models:Place">
+                    <maps:Pin Location="{Binding Location}"
+                              Address="{Binding Address}"
+                              Label="{Binding Description}" />
+                </DataTemplate>
+            </maps:Map.ItemTemplate>
+        </maps:Map>
+    </Grid>
+</ContentPage>
