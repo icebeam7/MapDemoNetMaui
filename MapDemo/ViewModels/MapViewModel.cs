@@ -2,12 +2,19 @@
 using Microsoft.Maui.Controls.Maps;
 using CommunityToolkit.Mvvm.Input;
 using MapDemo.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MapDemo.ViewModels
 {
     public partial class MapViewModel : BaseViewModel
     {
         public ObservableCollection<Place> Places { get; } = new();
+
+        [ObservableProperty]
+        bool isReady;
+
+        [ObservableProperty]
+        ObservableCollection<Place> bindablePlaces;
 
         private CancellationTokenSource cts;
         private IGeolocation geolocation;
@@ -30,17 +37,24 @@ namespace MapDemo.ViewModels
                     GeolocationAccuracy.Medium,
                     TimeSpan.FromSeconds(10));
 
-                var location = await Geolocation.GetLocationAsync(request, cts.Token);
-                var placemarks = await Geocoding.GetPlacemarksAsync(location);
+                var location = await geolocation.GetLocationAsync(request, cts.Token);
+                var placemarks = await geocoding.GetPlacemarksAsync(location);
                 var address = placemarks?.FirstOrDefault()?.AdminArea;
 
-                Places.Clear();
-                Places.Add(new Place()
+				Places.Clear();
+				
+                var place = new Place()
                 {
-                    Location = location,
+                    Location = location, 
                     Address = address,
                     Description = "Current Location"
-                });
+                };
+
+                Places.Add(place);
+
+                var placeList = new List<Place>() { place };
+				BindablePlaces = new ObservableCollection<Place>(placeList);
+                IsReady = true;
             }
             catch (Exception ex)
             {

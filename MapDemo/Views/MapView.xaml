@@ -5,6 +5,7 @@
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
              xmlns:vm="clr-namespace:MapDemo.ViewModels"
              xmlns:models="clr-namespace:MapDemo.Models"
+             xmlns:behaviors="clr-namespace:MapDemo.Behaviors"
              x:DataType="vm:MapViewModel"
              Title="MapView">
     <Grid Margin="10"
@@ -12,9 +13,16 @@
           RowDefinitions="Auto,*">
         <Button Text="Get Current Location"
                 Command="{Binding GetCurrentLocationCommand}"/>
-        
+
         <maps:Map Grid.Row="1" 
                   ItemsSource="{Binding Places}">
+
+            <maps:Map.Behaviors>
+                <behaviors:MapBehavior 
+                    IsReady="{Binding IsReady}"
+                    Places="{Binding BindablePlaces}"/>
+            </maps:Map.Behaviors>
+            
             <maps:Map.ItemTemplate>
                 <DataTemplate x:DataType="models:Place">
                     <maps:Pin Location="{Binding Location}"
